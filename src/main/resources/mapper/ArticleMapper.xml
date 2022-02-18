@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zbin.cisp.dao.ArticleMapper">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into article(title, content, user_id, create_time, category_id)
+        values (#{title}, #{content}, #{userId}, now(), #{categoryId})
+    </insert>
+
+    <select id="getIndexArticles" resultType="com.zbin.cisp.vo.ArticleVO">
+        select article.*, user.nickname,user.avatar, category.name as category from article
+        inner join category on article.category_id = category.id
+        inner join `user` on `user`.id = article.user_id order by article.create_time desc
+        <if test="page != null">
+            limit #{page},10
+        </if>
+    </select>
+
+    <select id="countIndexArticles" resultType="int">
+        select count(1)
+        from article
+                 inner join category on article.category_id = category.id
+                 inner join `user` on `user`.id = article.user_id
+        order by article.create_time desc
+    </select>
+
+    <select id="getArticleById" resultType="com.zbin.cisp.vo.ArticleVO">
+        select article.*, user.nickname, user.signature, user.avatar, category.name as category
+        from article
+                 inner join category on article.category_id = category.id
+                 inner join `user` on `user`.id = article.user_id
+        where article.id = #{id};
+    </select>
+
+    <select id="getAticlesByUserId" resultType="com.zbin.cisp.vo.ArticleVO">
+        select *
+        from article
+        where user_id = #{userId}
+        order by create_time desc;
+    </select>
+
+    <select id="countAllArticle" resultType="int">
+        select count(1)
+        from article;
+    </select>
+
+    <select id="getArticleByCategoryId" resultType="com.zbin.cisp.vo.ArticleVO">
+        select article.*, user.nickname, user.signature, user.avatar, category.name as category
+        from article
+                 inner join category on article.category_id = category.id
+                 inner join `user` on `user`.id = article.user_id
+        where article.category_id = #{categoryId} limit #{page}
+            , 10;
+    </select>
+
+    <select id="countArticleByCateId" resultType="int">
+        select count(1)
+        from article
+                 inner join category on article.category_id = category.id
+                 inner join `user` on `user`.id = article.user_id
+        where article.category_id = #{categoryId}
+    </select>
+
+    <update id="updateById">
+        update article
+        set title       = #{title},
+            content     = #{content},
+            category_id = #{categoryId},
+            create_time = now()
+        where id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete
+        from article
+        where id = #{id}
+    </delete>
+
+    <update id="updateTopStatus">
+        update article
+        set top = #{top}
+        where id = #{id}
+    </update>
+
+    <select id="getTopArticle" resultType="com.zbin.cisp.vo.ArticleVO">
+        select article.*, user.nickname, user.avatar, category.name as category
+        from article
+                 inner join category on article.category_id = category.id
+                 inner join `user` on `user`.id = article.user_id
+        where top = 'true'
+        order by article.create_time desc;
+    </select>
+
+    <select id="searchArticle" resultType="com.zbin.cisp.vo.ArticleVO">
+        select article.*, user.nickname,user.avatar, category.name as category from article
+        inner join category on article.category_id = category.id
+        inner join `user` on `user`.id = article.user_id
+        where 1 = 1
+        <if test="categoryId != null and categoryId != 0">
+            and category_id = #{categoryId}
+        </if>
+        <if test="startTime != null and startTime != ''">
+            and article.create_time > #{startTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and article.create_time &lt; #{endTime}
+        </if>
+        <if test="keyword != null and keyword != ''">
+            and title like CONCAT('%',#{keyword},'%')
+        </if>
+        order by article.create_time desc;
+    </select>
+
+    <select id="getHotArticles" resultType="com.zbin.cisp.domain.Article">
+        select *
+        from article
+        where create_time between #{startDate} and #{endDate}
+        order by comment_count desc limit 10
+    </select>
+
+    <update id="addComment">
+        update article
+        set comment_count = comment_count + 1
+        where id = #{id}
+    </update>
+
+    <update id="deleteComment">
+        update article
+        set comment_count = comment_count - 1
+        where id = #{id}
+    </update>
+</mapper>

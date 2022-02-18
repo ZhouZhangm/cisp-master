@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>登录</title>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1" name="viewport">
+    <meta content="校内信息共享平台" name="keywords">
+    <meta content="一个提供给大学生的校内信息共享平台" name="description">
+    <link href="/static/res/layui/css/layui.css" rel="stylesheet">
+    <link href="/static/res/css/global.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="fly-header layui-bg-black">
+    <div class="layui-container">
+        <a class="fly-logo" href="/">
+            <img alt="layui" src="/static/res/images/logo.png">
+        </a>
+
+        <ul class="layui-nav fly-nav-user">
+            <!-- 未登入的状态 -->
+            <li class="layui-nav-item">
+                <a class="iconfont icon-touxiang layui-hide-xs" href="/login"></a>
+            </li>
+            <li class="layui-nav-item">
+                <a href="/login">登录</a>
+            </li>
+            <li class="layui-nav-item">
+                <a href="/register">注册</a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="layui-container fly-marginTop">
+    <div class="fly-panel fly-panel-user" pad20>
+        <div class="layui-tab layui-tab-brief" lay-filter="user">
+            <ul class="layui-tab-title">
+                <li class="layui-this">登录</li>
+                <li><a href="/register">注册</a></li>
+            </ul>
+            <div class="layui-form layui-tab-content" id="LAY_ucm" style="padding: 20px 0;">
+                <div class="layui-tab-item layui-show">
+                    <div class="layui-form layui-form-pane">
+                        <form method="post">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label" for="L_email">学号</label>
+                                <div class="layui-input-inline">
+                                    <input autocomplete="off" class="layui-input" id="L_email" lay-verify="required" name="username"
+                                           placeholder="请输入学号"
+                                           required type="text">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label" for="L_pass">密码</label>
+                                <div class="layui-input-inline">
+                                    <input autocomplete="off" class="layui-input" id="L_pass" lay-verify="required" name="password"
+                                           placeholder="请输入密码"
+                                           required type="password">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <button class="layui-btn" lay-filter="login" lay-submit>立即登录</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="fly-footer">
+    <p>校内信息共享平台 &nbsp;&nbsp; Copyright&nbsp; &copy; 2021 周海林</p>
+</div>
+
+<script src="/static/res/layui/layui.js"></script>
+<script>
+    layui.config({
+        version: "3.0.0"
+        , base: '/static/res/mods/'
+    }).extend({
+        fly: 'index'
+    }).use('fly');
+    layui.use(['form', 'jquery'], function () {
+        var form = layui.form;
+        var $ = layui.jquery;
+
+        //监听提交
+        form.on('submit(login)', function (data) {
+            $.ajax({
+                url: '/doLogin'
+                , type: 'post'
+                , contentType: "application/json"
+                , data: JSON.stringify(data.field)
+                , success: function (result) {
+                    if (result.msg == '登录成功') {
+                        layer.msg('登录成功', {
+                            time: 2000, end: function () {
+                                location.href = '/index'
+                            }
+                        });
+                    } else {
+                        layer.msg(result.msg, {
+                            time: 1000
+                        });
+                        var index = parent.layer.getFrameIndex(window.name);
+                        parent.layer.close();
+                    }
+                }
+            });
+            return false;
+        });
+
+    });
+</script>
+
+</body>
+</html>

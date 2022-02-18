@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>帖子详情</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="信息共享平台">
+    <meta name="description" content="一个提供给大学生的校内信息共享平台">
+    <link rel="stylesheet" href="/static/res/layui/css/layui.css">
+    <link rel="stylesheet" href="/static/res/css/global.css">
+</head>
+<body>
+
+<div class="fly-header layui-bg-black">
+    <div class="layui-container">
+        <a class="fly-logo" href="/">
+            <img src="/static/res/images/logo.png" alt="layui">
+        </a>
+
+        <ul class="layui-nav fly-nav-user">
+
+            <!-- 登入后的状态 -->
+            <#if Session['user']?exists>
+
+            <li class="layui-nav-item">
+                <a class="fly-nav-avatar" href="javascript:;">
+                    <cite class="layui-hide-xs">${user.nickname}</cite>
+                    <!--            <img-->
+                    <!--              src="${user.avatar}">-->
+                </a>
+                <dl class="layui-nav-child">
+                    <dd><a href="/user/set"><i class="layui-icon">&#xe620;</i>基本设置</a></dd>
+                    <dd><a href="/user/center"><i class="layui-icon"
+                                                  style="margin-left: 2px; font-size: 22px;">&#xe68e;</i>我的主页</a>
+                    </dd>
+                    <hr style="margin: 5px 0;">
+                    <dd><a href="/logout" style="text-align: center;">退出</a></dd>
+                </dl>
+            </li>
+            <#else>
+            <!-- 未登入的状态 -->
+            <li class="layui-nav-item">
+                <a class="iconfont icon-touxiang layui-hide-xs" href="/login"></a>
+            </li>
+            <li class="layui-nav-item">
+                <a href="/login">登录</a>
+            </li>
+            <li class="layui-nav-item">
+                <a href="/register">注册</a>
+            </li>
+        </#if>
+        </ul>
+    </div>
+</div>
+
+<div class="layui-hide-xs">
+    <div class="fly-panel fly-column">
+        <div class="layui-container">
+            <ul class="layui-clear">
+                <li class="layui-hide-xs"><a href="/">首页</a></li>
+                <#if Session['user']?exists>
+                <li><a href="/user/${user.id}">个人中心</a></li>
+                <li class="layui-hide-xs layui-hide-sm layui-show-md-inline-block"><span
+                        class="fly-mid"></span></li>
+                <!-- 用户登入后显示 -->
+                <li class="layui-hide-xs layui-hide-sm layui-show-md-inline-block"><a
+                        href="/user/center">我发布的信息</a></li>
+            </#if>
+            </ul>
+
+            <div class="fly-column-right layui-hide-xs">
+                <a href="/add" class="layui-btn">我要发布</a>
+            </div>
+            <div class="layui-hide-sm layui-show-xs-block"
+                 style="margin-top: -10px; padding-bottom: 10px; text-align: center;">
+                <a href="/add" class="layui-btn">我要发布</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="layui-container">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12 content detail">
+            <div class="fly-panel detail-box">
+                <h1>${article.title}</h1>
+                <div class="detail-about">
+                    <!--          <a class="fly-avatar" href="/user/${article.userId}">-->
+                    <!--            <img-->
+                    <!--              src="${article.avatar!}"-->
+                    <!--              alt="${article.nickname}">-->
+                    <!--          </a>-->
+                    <div class="fly-detail-user">
+                        <a href="/user/${article.userId}" class="fly-link">
+                            <cite>${article.nickname}</cite>
+                        </a>
+                        <span>${article.createTime}</span>
+                    </div>
+                    <div class="detail-hits layui-inline" id="LAY_jieAdmin" data-id="123">
+            <span
+                    style="padding-right: 10px; color: #ff361e">个性签名：${article.signature!'这个人有点懒，什么都没有留下'}</span>
+                        <#if user?? && user.id == article.userId || adminUser??>
+                        <form id="form" class="layui-form layui-inline">
+                            <input value="${article.id}" name="id" type="hidden">
+                            <button class="layui-btn layui-btn-xs layui-btn-radius layui-btn-danger"
+                                    style="border-radius: 5px" lay-filter="delete"
+                                    lay-submit>删除
+                            </button>
+                        </form>
+                    </#if>
+                </div>
+            </div>
+            <div class="detail-body photos">
+                ${article.content}
+            </div>
+        </div>
+
+        <div class="fly-panel detail-box" id="flyReply">
+            <fieldset class="layui-elem-field layui-field-title" style="text-align: center;">
+                <legend>评论</legend>
+            </fieldset>
+
+            <ul class="jieda" id="jieda">
+                <#if commentVOList??>
+                <#list commentVOList as commentVO>
+                <li data-id="111" class="jieda-daan">
+                    <a name="item-1111111111"></a>
+                    <div class="detail-about detail-about-reply">
+                        <!--                  <a class="fly-avatar" href="/user/${commentVO.userId}">-->
+                        <!--                    <img-->
+                        <!--                      src="${commentVO.avatar}"-->
+                        <!--                      alt="${commentVO.nickname}">-->
+                        <!--                  </a>-->
+
+                        <div class="detail-hits">
+                            <span>${commentVO.nickname}</span>
+                            <br>
+                            <span>${commentVO.createTime}</span>
+                        </div>
+
+                    </div>
+                    <div class="detail-body jieda-body photos">
+                        <p>${commentVO.content}</p>
+                    </div>
+                    <div class="jieda-admin">
+                        <#if user?? && user.id == commentVO.userId || adminUser??>
+                        <form id="form" class="layui-form">
+                            <input value="${commentVO.id}" name="id" type="hidden">
+                            <button class="layui-btn layui-btn-xs layui-btn-radius layui-btn-primary"
+                                    style="border-radius: 5px" lay-filter="deleteCmt"
+                                    lay-submit>删除
+                            </button>
+                        </form>
+                    </#if>
+        </div>
+        </li>
+    </#list>
+    <#else>
+    <!-- 无数据时 -->
+    <li class="fly-none">消灭零回复</li>
+</#if>
+</ul>
+<div class="layui-form layui-form-pane">
+    <#if Session['user']?exists>
+    <form action="/article/reply/" method="post">
+        <div class="layui-form-item layui-form-text">
+            <a name="comment"></a>
+            <div class="layui-input-block">
+                <textarea id="L_content" name="content" required lay-verify="required"
+                          placeholder="请输入内容" class="layui-textarea fly-editor"
+                          style="height: 150px;"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <input type="hidden" name="userId" value="${user.id}">
+            <input type="hidden" name="articleId" value="${article.id}">
+            <button class="layui-btn" lay-filter="comment" lay-submit>提交回复</button>
+        </div>
+    </form>
+    <#else>
+    使用评论功能，请先<a href="/login" style="color: blue;"><u>登录</u></a>
+</#if>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="fly-footer">
+    <p>校内信息共享平台 &nbsp;&nbsp; Copyright&nbsp; &copy; 2021 周海林</p>
+</div>
+
+<script src="/static/res/layui/layui.js"></script>
+<script>
+    layui.use(['jquery', 'form', 'layer'], function () {
+        var $ = layui.jquery,
+            form = layui.form,
+            layer = layui.layer;
+
+        //监听提交
+        form.on('submit(comment)', function (data) {
+            $.ajax({
+                url: '/article/addComment'
+                , type: 'post'
+                , contentType: 'application/json'
+                , data: JSON.stringify(data.field)
+                , success: function (result) {
+                    if (result.code == 0) {
+                        layer.alert("评论成功", {
+                            icon: 1
+                        }, function () {
+                            // 获得frame索引
+                            var index = parent.layer.getFrameIndex(window.name);
+                            //关闭当前frame
+                            parent.layer.close(index);
+                            window.parent.location.reload();
+                        });
+                    } else {
+                        layer.alert(result.msg)
+                    }
+                }
+            });
+            return false;
+        });
+
+        form.on('submit(delete)', function (data) {
+            layer.confirm('确定要删除吗？', function (index) {
+                $.ajax({
+                    url: '/article/delete'
+                    , type: 'post'
+                    , contentType: 'application/json'
+                    , data: JSON.stringify(data.field)
+                    , success: function (result) {
+                        if (result.code == 0) {
+                            layer.alert(result.msg, {
+                                icon: 1
+                            }, function () {
+                                window.location.href = "/index"
+                            });
+                        } else {
+                            layer.alert(result.msg)
+                        }
+                    }
+                });
+            });
+            return false;
+        });
+
+        form.on('submit(deleteCmt)', function (data) {
+            layer.confirm('确定要删除这条评论吗？', function (index) {
+                $.ajax({
+                    url: '/article/delComment'
+                    , type: 'post'
+                    , contentType: 'application/json'
+                    , data: JSON.stringify(data.field)
+                    , success: function (result) {
+                        if (result.code == 0) {
+                            layer.alert(result.msg, {
+                                icon: 1
+                            }, function () {
+                                window.location.reload()
+                            });
+                        } else {
+                            layer.alert(result.msg)
+                        }
+                    }
+                });
+            });
+            return false;
+        });
+    });
+    layui.config({
+        version: "3.0.0"
+        , base: '/static/res/mods/'
+    }).extend({
+        fly: 'index'
+    }).use(['fly', 'face'], function () {
+        var $ = layui.$
+            , fly = layui.fly;
+        //内容解析。
+        $('.detail-body').each(function () {
+            var othis = $(this), html = othis.html();
+            othis.html(fly.content(html));
+        });
+    });
+</script>
+
+</body>
+</html>

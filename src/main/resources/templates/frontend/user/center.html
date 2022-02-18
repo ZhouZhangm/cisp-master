@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>用户中心</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="校内信息共享平台">
+    <meta name="description" content="一个提供给大学生的校内信息共享平台">
+    <link rel="stylesheet" href="/static/res/layui/css/layui.css">
+    <link rel="stylesheet" href="/static/res/css/global.css">
+</head>
+<body>
+
+<div class="fly-header layui-bg-black">
+    <div class="layui-container">
+        <a class="fly-logo" href="/">
+            <img src="/static/res/images/logo.png" alt="layui">
+        </a>
+
+        <ul class="layui-nav fly-nav-user">
+
+            <!-- 登入后的状态 -->
+            <#if Session['user']?exists>
+
+            <li class="layui-nav-item">
+                <a class="fly-nav-avatar" href="javascript:;">
+                    <cite class="layui-hide-xs">${user.nickname}</cite>
+                    <!--            <img-->
+                    <!--              src="${user.avatar!}">-->
+                </a>
+                <dl class="layui-nav-child">
+                    <dd><a href="/user/set"><i class="layui-icon">&#xe620;</i>基本设置</a></dd>
+                    <dd><a href="/user/${user.id}"><i class="layui-icon"
+                                                      style="margin-left: 2px; font-size: 22px;">&#xe68e;</i>我的主页</a>
+                    </dd>
+                    <hr style="margin: 5px 0;">
+                    <dd><a href="/logout" style="text-align: center;">退出</a></dd>
+                </dl>
+            </li>
+            <#else>
+            <!-- 未登入的状态 -->
+            <li class="layui-nav-item">
+                <a class="iconfont icon-touxiang layui-hide-xs" href="/login"></a>
+            </li>
+            <li class="layui-nav-item">
+                <a href="/login">登录</a>
+            </li>
+            <li class="layui-nav-item">
+                <a href="/register">注册</a>
+            </li>
+        </#if>
+        </ul>
+    </div>
+</div>
+
+<div class="layui-container fly-marginTop fly-user-main">
+    <ul class="layui-nav layui-nav-tree layui-inline" lay-filter="user">
+        <li class="layui-nav-item">
+            <a href="/user/${user.id}">
+                <i class="layui-icon">&#xe68e;</i>
+                我的主页
+            </a>
+        </li>
+        <li class="layui-nav-item layui-this">
+            <a href="/user/center">
+                <i class="layui-icon">&#xe612;</i>
+                用户中心
+            </a>
+        </li>
+        <li class="layui-nav-item">
+            <a href="/user/set">
+                <i class="layui-icon">&#xe620;</i>
+                基本设置
+            </a>
+        </li>
+    </ul>
+
+    <div class="site-tree-mobile layui-hide">
+        <i class="layui-icon">&#xe602;</i>
+    </div>
+    <div class="site-mobile-shade"></div>
+
+    <div class="site-tree-mobile layui-hide">
+        <i class="layui-icon">&#xe602;</i>
+    </div>
+    <div class="site-mobile-shade"></div>
+
+
+    <div class="fly-panel fly-panel-user" pad20>
+        <div class="layui-tab layui-tab-brief" lay-filter="user">
+            <ul class="layui-tab-title" id="LAY_mine">
+                <li data-type="mine-jie" lay-id="index" class="layui-this">我发布的信息（<span>${myArticles?size}</span>）</li>
+            </ul>
+            <div class="layui-tab-content" style="padding: 20px 0;">
+                <div class="layui-tab-item layui-show">
+                    <ul class="mine-view jie-row">
+                        <#if myArticles??>
+                        <#list myArticles as article>
+                        <li>
+                            <a class="jie-title" href="/article/${article.id}" target="_blank">${article.title}</a>
+                            <i>${article.createTime}</i>
+                            <em>${article.commentCount}评论</em>
+                        </li>
+                    </#list>
+                    <#else>
+                    暂无数据
+                </#if>
+                </ul>
+                <div id="LAY_page"></div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<div class="fly-footer">
+    <p>校内信息共享平台 &nbsp;&nbsp; Copyright&nbsp; &copy; 2021 周海林</p>
+</div>
+
+<script src="/static/res/layui/layui.js"></script>
+<script>
+    layui.config({
+        version: "3.0.0"
+        , base: '/static/res/mods/'
+    }).extend({
+        fly: 'index'
+    }).use('fly');
+</script>
+
+</body>
+</html>

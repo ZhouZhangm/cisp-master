@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>文章列表</title>
+    <meta content="webkit" name="renderer">
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0"
+          name="viewport">
+    <link href="/static/img/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
+    <link href="/static/css/font.css" rel="stylesheet">
+    <link href="/static/css/weadmin.css" rel="stylesheet">
+    <script charset="utf-8" src="/static/layui/layui.js"></script>
+</head>
+
+<body>
+<div class="weadmin-nav">
+			<span class="layui-breadcrumb">
+        <a href="">首页</a>
+        <a href="">文章管理</a>
+        <a>
+          <cite>文章列表</cite></a>
+      </span>
+    <a class="layui-btn layui-btn-sm" href="javascript:location.replace(location.href);"
+       style="line-height:1.6em;margin-top:3px;float:right" title="刷新">
+        <i class="layui-icon" style="line-height:30px">ဂ</i></a>
+</div>
+<div class="weadmin-body">
+    <div class="layui-row">
+        <form class="layui-form layui-col-md12 we-search">
+            文章搜索：
+            <div class="layui-input-inline">
+                <select name="categoryId">
+                    <option value="0">请选择分类</option>
+                    <#if category??>
+                    <#list category as c>
+                    <option value="${c.id}">${c.name}</option>
+                </#list>
+            </
+            #if>
+            </select>
+    </div>
+    <div class="layui-inline">
+        <input class="layui-input" id="start" name="startTime" placeholder="开始日期">
+    </div>
+    <div class="layui-inline">
+        <input class="layui-input" id="end" name="endTime" placeholder="截止日期">
+    </div>
+    <div class="layui-inline">
+        <input autocomplete="off" class="layui-input" name="keyword" placeholder="请输入关键字"
+               type="text">
+    </div>
+    <button class="layui-btn" lay-filter="search" lay-submit type="button"><i class="layui-icon">&#xe615;</i>
+    </button>
+    </form>
+</div>
+<div class="weadmin-block">
+    <button class="layui-btn layui-btn-normal"
+            onclick="WeAdminShow('添加文章','/admin/article/edit','','',1)"><i
+            class="layui-icon">&#xe61f;</i>添加
+    </button>
+    <span class="fr" style="line-height:40px">共有数据：${articleCount} 条</span>
+</div>
+<table class="layui-form layui-table" id="memberList">
+    <thead>
+    <tr>
+        <th>序号</th>
+        <th>ID</th>
+        <th>标题</th>
+        <th>分类</th>
+        <th>作者</th>
+        <th>发布时间</th>
+        <th>置顶</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    <#if articleList??>
+    <#list articleList as article>
+    <tr data-id="1">
+        <td>${article_index + 1}</td>
+        <td>${article.id}</td>
+        <td>${article.title}</td>
+        <td>${article.category}</td>
+        <td>${article.nickname}</td>
+        <td>${article.createTime}</td>
+        <form action="" class="layui-form">
+            <td>
+                <input name="id" type="checkbox" <#if article.top == true>checked
+            </
+            #if> value="${article.id}" lay-filter="top" lay-skin="switch" lay-text="已置顶|未置顶">
+            </td>
+        </form>
+        <td class="td-manage">
+            <a href="javascript:;"
+               onclick="WeAdminEdit('编辑','/admin/article/edit?articleId=${article.id}', 2)"
+               title="编辑">
+                <i class="layui-icon">&#xe642;</i>
+            </a>
+            <a href="javascript:;" onclick="WeAdminShow('查看文章','/article/${article.id}',800,400)"
+               title="查看">
+                <i class="layui-icon">&#xe63c;</i>
+            </a>
+            <a href="javascript:;" onclick="article_del(this,${article.id})" title="删除">
+                <i class="layui-icon">&#xe640;</i>
+            </a>
+        </td>
+    </tr>
+    </
+    #list>
+</
+#if>
+</tbody>
+</table>
+</div>
+<script type="text/javascript">
+    layui.extend({
+        admin: '/static/js/admin'
+    });
+    layui.use(['laydate', 'table', 'form', 'layer', 'admin', 'jquery'], function () {
+        var laydate = layui.laydate,
+            table = layui.table,
+            $ = layui.jquery,
+            layer = layui.layer,
+            admin = layui.admin,
+            form = layui.form;
+
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#start' //指定元素
+        });
+
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#end' //指定元素
+        });
+
+        form.render();
+
+        article_del = function (obj, id) {
+            layer.confirm('确认要删除吗？', function (index) {
+                var data = {"id": id}
+                $.ajax({
+                    url: '/article/delete'
+                    , type: 'post'
+                    , contentType: 'application/json'
+                    , data: JSON.stringify(data)
+                    , success: function (result) {
+                        if (result.code == 0) {
+                            layer.msg(result.msg, {
+                                time: 2000, end: function () {
+                                    parent.layer.close(parent.layer.getFrameIndex(window.name));
+                                    parent.location.reload();
+                                }
+                            });
+                        } else {
+                            layer.msg(result.msg);
+                        }
+                    }
+                });
+            });
+        }
+
+        //监听指定开关
+        form.on('switch(top)', function (data) {
+            $.ajax({
+                url: '/article/setTop'
+                , type: 'post'
+                , contentType: 'application/json'
+                , data: JSON.stringify(data)
+            });
+        });
+
+        form.on("submit(search)", function (data) {
+            $.ajax({
+                url: '/admin/article/articleList'
+                , type: 'post'
+                , contentType: 'application/json'
+                , data: JSON.stringify(data.field)
+                , success: function (result) {
+                    parent.location.reload();
+                }
+            });
+        });
+
+    });
+</script>
+</body>
+
+</html>

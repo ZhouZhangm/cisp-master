@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>管理员登录</title>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1" name="viewport">
+    <meta content="管理员登录" name="keywords">
+    <meta content="管理员登录"
+          name="description">
+    <link href="/static/img/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
+    <link href="/static/layui/css/layui.css" rel="stylesheet">
+    <link href="http://at.alicdn.com/t/font_693759_ask70l8wanw.css" rel="stylesheet">
+    <link href="https://cdn.bootcss.com/animate.css/3.5.2/animate.min.css" rel="stylesheet"/>
+    <link href="/static/css/register.css" rel="stylesheet"/>
+    <link href="/static/css/nprogress.css" rel="stylesheet">
+</head>
+<body background="/static/img/adminbg.jpeg" bgcolor="#00ffff">
+<div class="admin-login-box animated rotateIn">
+    <div class="head"></div>
+    <div align="center" style="color: white"><font size="5">管理员登录</font></div>
+    <div class="input-box">
+        <form action="" class="layui-form">
+            <input autocomplete="off" class="layui-input" lay-verify="required|user" name="username" placeholder="请输入管理员账号"
+                   required type="text">
+            <input autocomplete="off" class="layui-input" lay-verify="required|pwd" name="password" placeholder="请输入密码"
+                   required type="password">
+            <input lay-filter="login" lay-submit type="submit" value="登    录">
+        </form>
+        <div align="center" class="oauth">
+            <i class="layui-icon layui-icon-home" style="font-size: 25px;color: white"></i>
+        </div>
+    </div>
+    <div align="center" class="copyright" style="color: white">
+        © 2021 周海林. All Rights Reserved.
+    </div>
+</div>
+<!--js逻辑-->
+<script src="/static/layui/layui.js"></script>
+<script src="/static/js/nprogress.js"></script>
+<script>
+    NProgress.start();
+    window.onload = function () {
+        NProgress.done();
+    }
+    layui.use(['form', 'jquery'], function () {
+        var form = layui.form;
+        var $ = layui.jquery;
+
+        //监听提交
+        form.on('submit(login)', function (data) {
+            $.ajax({
+                url: '/adminLogin'
+                , type: 'post'
+                , contentType: "application/json"
+                , data: JSON.stringify(data.field)
+                , success: function (result) {
+                    if (result.code == 0) {
+                        layer.msg('登录成功', {
+                            time: 2000, end: function () {
+                                location.href = '/admin/index'
+                            }
+                        });
+                    } else if (result.code == 2) {
+                        layer.msg(result.msg, {
+                            time: 1000
+                        });
+                    } else {
+                        layer.msg(result.msg, {
+                            time: 1000
+                        });
+                        parent.layer.close();
+                    }
+                }
+            });
+            return false;
+        });
+
+        $(".oauth .layui-icon-home").click(function () {
+            window.location.href = "/index"
+        });
+
+    })
+    ;
+</script>
+</body>
+</html>

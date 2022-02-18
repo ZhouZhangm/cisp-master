@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>后台管理系统</title>
+    <meta content="webkit" name="renderer">
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0"
+          name="viewport">
+    <link href="/static/css/font.css" rel="stylesheet">
+    <link href="/static/css/weadmin.css" rel="stylesheet">
+</head>
+
+<body>
+<div class="weadmin-nav">
+			<span class="layui-breadcrumb">
+        <a href="/welcome">首页</a>
+        <a href="">分类管理</a>
+      </span>
+    <a class="layui-btn layui-btn-sm" href="javascript:location.replace(location.href);"
+       style="line-height:1.6em;margin-top:3px;float:right" title="刷新">
+        <i class="layui-icon" style="line-height:30px">&#x1002;</i></a>
+</div>
+<div class="weadmin-body">
+    <div class="weadmin-block">
+        <button class="layui-btn layui-btn-normal" onclick="WeAdminShow('添加分类','/admin/article/category/add',350,180)">
+            <i class="layui-icon"></i>添加分类
+        </button>
+    </div>
+    <table class="layui-table" id="memberList">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>分类名称</th>
+            <th>创建时间</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <#if categoryList??>
+        <#list categoryList as category>
+        <tr data-id="1">
+            <td>${category_index + 1}</td>
+            <td>${category.name!"-"}</td>
+            <td>${category.createTime}</td>
+            <td class="td-manage">
+                <a href="javascript:;" onclick="WeAdminEdit('编辑','/admin/article/category/edit', ${category.id}, 340, 180)"
+                   title="编辑">
+                    <i class="layui-icon">&#xe642;</i>
+                </a>
+                <a href="javascript:;" onclick="delCatery(${category.id})" title="删除">
+                    <i class="layui-icon">&#xe640;</i>
+                </a>
+            </td>
+        </tr>
+        </#list>
+    </#if>
+    </tbody>
+    </table>
+</div>
+<script charset="utf-8" src="/static/layui/layui.js"></script>
+<script>
+    layui.extend({
+        admin: '/static/js/admin'
+    });
+    layui.use(['admin', 'jquery', 'form', 'layer'], function () {
+        var admin = layui.admin,
+            $ = layui.jquery,
+            form = layui.form,
+            layer = layui.layer;
+
+        delCatery = function (id) {
+            layer.confirm('确定要删除吗？', function (index) {
+                var data = {"id": id}
+                $.ajax({
+                    url: '/article/delCategory'
+                    , type: 'post'
+                    , contentType: 'application/json'
+                    , data: JSON.stringify(data)
+                    , success: function (result) {
+                        if (result.code == 0) {
+                            layer.msg(result.msg);
+                            setTimeout('window.parent.location.reload()', 2000);
+                        } else {
+                            layer.msg(result.msg);
+                        }
+                    }
+                });
+            });
+        }
+
+        //监听提交
+        form.on('submit(addCategory)', function (data) {
+            $.ajax({
+                url: '/article/addCategory'
+                , type: 'post'
+                , contentType: 'application/json'
+                , data: JSON.stringify(data.field)
+                , success: function (result) {
+                    if (result.code == 0) {
+                        layer.alert("增加成功", {
+                            icon: 1
+                        }, function () {
+                            // 获得frame索引
+                            var index = parent.layer.getFrameIndex(window.name);
+                            //关闭当前frame
+                            parent.layer.close(index);
+                        });
+                    } else {
+                        layer.alert(result.msg)
+                    }
+                }
+            });
+            return false;
+        });
+    });
+</script>
+</body>
+
+</html>

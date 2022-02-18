@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>添加分类</title>
+    <meta content="webkit" name="renderer">
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0"
+          name="viewport">
+    <link href="/static/css/font.css" rel="stylesheet">
+    <link href="/static/css/weadmin.css" rel="stylesheet">
+</head>
+
+<body>
+<div class="weadmin-body">
+
+    <form class="layui-form" id="form">
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">分类名称</label>
+            <div class="layui-input-block">
+                <input autocomplete="off" class="layui-input " jq-error="请输入分类名称" lay-verify="required"
+                       name="name" placeholder="请输入分类名称" type="text">
+            </div>
+        </div>
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-filter="addCategory" lay-submit="">立即提交</button>
+            <button class="layui-btn layui-btn-primary" type="reset">重置</button>
+        </div>
+    </form>
+
+</div>
+<script src="/static/res/layui/layui.js"></script>
+<script>
+    layui.extend({
+        admin: '/static/js/admin'
+    });
+    layui.use(['admin', 'jquery', 'form', 'layer'], function () {
+        var admin = layui.admin,
+            $ = layui.jquery,
+            form = layui.form,
+            layer = layui.layer;
+
+        //监听提交
+        form.on('submit(addCategory)', function (data) {
+            $.ajax({
+                url: '/article/addCategory'
+                , type: 'post'
+                , contentType: 'application/json'
+                , data: JSON.stringify(data.field)
+                , success: function (result) {
+                    if (result.code == 0) {
+                        layer.alert("增加成功", {
+                            icon: 1
+                        }, function () {
+                            // 获得frame索引
+                            var index = parent.layer.getFrameIndex(window.name);
+                            //关闭当前frame
+                            parent.layer.close(index);
+                            window.parent.location.reload();
+                        });
+                    } else {
+                        layer.alert(result.msg)
+                    }
+                }
+            });
+            return false;
+        });
+    });
+</script>
+</body>
+
+</html>
