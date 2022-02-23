@@ -3,9 +3,8 @@ package com.zbin.cisp.utils;
 import java.util.UUID;
 
 /**
- * Created by Zbin on 2019-02-15
+ * Created by Zhouhailin on 2021-11-30
  */
-
 public class UUIDUtil {
 
     public static String getUUID() {

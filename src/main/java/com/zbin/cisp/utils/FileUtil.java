@@ -15,9 +15,8 @@ import java.io.File;
 import java.util.UUID;
 
 /**
- * Created by Zbin on 2019-02-18
+ * Created by Zhouhailin on 2021-11-30
  */
-
 public class FileUtil {
 
     private static final String ACCESS_KEY = "pl7KvcAWGCe1eI2RPKKyrp7zxU_o8PM6rGAb7SG7";

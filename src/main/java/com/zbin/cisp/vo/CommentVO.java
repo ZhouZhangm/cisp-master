@@ -3,9 +3,8 @@ package com.zbin.cisp.vo;
 import com.zbin.cisp.domain.Comment;
 
 /**
- * Created by Zbin on 2019-02-19
+ * Created by Zhouhailin on 2021-11-30
  */
-
 public class CommentVO extends Comment {
 
     private String nickname;

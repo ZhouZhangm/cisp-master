@@ -3,9 +3,8 @@ package com.zbin.cisp.vo;
 import com.zbin.cisp.domain.Article;
 
 /**
- * Created by Zbin on 2019-02-17
+ * Created by Zhouhailin on 2021-11-30
  */
-
 public class ArticleVO extends Article {
 
     private String nickname;

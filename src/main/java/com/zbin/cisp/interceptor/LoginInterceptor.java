@@ -7,10 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * com.zbin.cisp.interceptor.LoginInterceptor
- *
- * @author Zbin
- * @date 2019/03/04
+ * Created by Zhouhailin on 2021-11-30
  */
 public class LoginInterceptor implements HandlerInterceptor {
 

@@ -2,6 +2,9 @@ package com.zbin.cisp.utils;
 
 import org.mindrot.jbcrypt.BCrypt;
 
+/**
+ * Created by Zhouhailin on 2021-11-30
+ */
 public class PasswordUtil {
 
     /**

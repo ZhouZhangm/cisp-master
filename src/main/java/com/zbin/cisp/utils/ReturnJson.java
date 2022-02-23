@@ -1,5 +1,8 @@
 package com.zbin.cisp.utils;
 
+/**
+ * Created by Zhouhailin on 2021-11-30
+ */
 public class ReturnJson {
 
     private Integer code = 0;
