@@ -7,9 +7,7 @@ import org.flowable.engine.runtime.Execution;
 import org.flowable.engine.runtime.ProcessInstance;
 import org.flowable.image.ProcessDiagramGenerator;
 import org.flowable.task.api.Task;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -124,11 +122,6 @@ public class FlowableController {
             }
         }
     }
-
-
-
-
-
 
     @RequestMapping(value = "/process", method = RequestMethod.POST)
     public void startProcessInstance() {
