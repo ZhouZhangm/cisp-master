@@ -1,76 +1,75 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <title>添加分类</title>
-    <meta content="webkit" name="renderer">
-    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
-    <meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0"
-          name="viewport">
-    <link href="/static/css/font.css" rel="stylesheet">
-    <link href="/static/css/weadmin.css" rel="stylesheet">
+  <meta charset="UTF-8">
+  <title>添加分类</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <link rel="stylesheet" href="/static/css/font.css">
+  <link rel="stylesheet" href="/static/css/weadmin.css">
 </head>
 
 <body>
 <div class="weadmin-body">
-    <form class="layui-form" id="form">
+  <form id="form" class="layui-form">
 
-        <div class="layui-form-item">
-            <label class="layui-form-label">分类名称</label>
-            <div class="layui-input-block">
-                <select lay-filter="column" lay-verify="required" name="categoryId">
-                    <option></option>
-                    <#if category??>
-                    <#list category as c>
-                    <option value="${c.id}">${c.name}</option>
-                </#list>
-            </
-            #if>
-            </select>
-        </div>
-        <div class="layui-input-block">
-            <input autocomplete="off" class="layui-input " jq-error="请输入分类名称" lay-verify="required"
-                   name="name" placeholder="请输入分类名称" type="text">
-        </div>
-</div>
-<div class="layui-input-block">
-    <button class="layui-btn" lay-filter="addCategory" lay-submit="">立即提交</button>
-    <button class="layui-btn layui-btn-primary" type="reset">重置</button>
-</div>
-<input autocomplete="off" class="layui-input" id="house"
-       name="id" type="hidden">
-</form>
+    <div class="layui-form-item">
+      <label class="layui-form-label">分类名称</label>
+      <div class="layui-input-block">
+        <select lay-verify="required" name="categoryId" lay-filter="column">
+          <option></option>
+          <#if category??>
+            <#list category as c>
+              <option value="${c.id}">${c.name}</option>
+            </#list>
+          </#if>
+        </select>
+      </div>
+      <div class="layui-input-block">
+        <input type="text" name="name" lay-verify="required" jq-error="请输入分类名称"
+               placeholder="请输入分类名称" autocomplete="off" class="layui-input ">
+      </div>
+    </div>
+    <div class="layui-input-block">
+      <button class="layui-btn" lay-submit="" lay-filter="addCategory">立即提交</button>
+      <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+    </div>
+    <input type="hidden" id="house" name="id"
+            autocomplete="off" class="layui-input" >
+  </form>
 
 </div>
 <script src="/static/res/layui/layui.js"></script>
 <script>
-    layui.extend({
-        admin: '/static/js/admin'
+  layui.extend({
+    admin: '/static/js/admin'
+  });
+  layui.use(['admin', 'jquery', 'form', 'layer'], function () {
+    var admin = layui.admin,
+        $ = layui.jquery,
+        form = layui.form,
+        layer = layui.layer;
+    //监听提交
+    form.on('submit(addCategory)', function (data) {
+      $.ajax({
+        url: '/article/updateCategory'
+        , type: 'post'
+        , contentType: 'application/json'
+        , data: JSON.stringify(data.field)
+        , success: function (result) {
+          if (result.code == 0) {
+            layer.msg(result.msg);
+            setTimeout('window.parent.location.reload()', 2000);
+          }else {
+            layer.msg(result.msg);
+          }
+        }
+      });
+      return false;
     });
-    layui.use(['admin', 'jquery', 'form', 'layer'], function () {
-        var admin = layui.admin,
-            $ = layui.jquery,
-            form = layui.form,
-            layer = layui.layer;
-        //监听提交
-        form.on('submit(addCategory)', function (data) {
-            $.ajax({
-                url: '/article/updateCategory'
-                , type: 'post'
-                , contentType: 'application/json'
-                , data: JSON.stringify(data.field)
-                , success: function (result) {
-                    if (result.code == 0) {
-                        layer.msg(result.msg);
-                        setTimeout('window.parent.location.reload()', 2000);
-                    } else {
-                        layer.msg(result.msg);
-                    }
-                }
-            });
-            return false;
-        });
-    });
+  });
 </script>
 </body>
 
