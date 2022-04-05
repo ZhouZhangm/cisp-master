@@ -71,34 +71,34 @@
                                         <select lay-verify="required" name="categoryId" lay-filter="column">
                                             <option></option>
                                             <#if category??>
-                                            <#list category as c>
-                                            <option value="${c.id}">${c.name}</option>
-                                        </#list>
-                                    </#if>
-                                    </select>
+                                                <#list category as c>
+                                                <option value="${c.id}">${c.name}</option>
+                                                </#list>
+                                            </#if>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="layui-col-md9">
+                                    <label for="L_title" class="layui-form-label">标题</label>
+                                    <div class="layui-input-block">
+                                        <input placeholder="请输入标题" type="text" id="L_title" name="title" required lay-verify="title"
+                                               autocomplete="off" class="layui-input">
+                                    </div>
                                 </div>
                             </div>
-                            <div class="layui-col-md9">
-                                <label for="L_title" class="layui-form-label">标题</label>
+                            <div class="layui-form-item layui-form-text">
                                 <div class="layui-input-block">
-                                    <input placeholder="请输入标题" type="text" id="L_title" name="title" required lay-verify="title"
-                                           autocomplete="off" class="layui-input">
+                                    <textarea placeholder="请输入内容"
+                                              id="editText"
+                                              name="content"
+                                              required lay-verify="article_content"
+                                              class="layui-textarea fly-editor" style="height: 250px;"></textarea>
                                 </div>
                             </div>
-                    </div>
-                    <div class="layui-form-item layui-form-text">
-                        <div class="layui-input-block">
-                            <textarea placeholder="请输入内容"
-                                      id="editText"
-                                      name="content"
-                                      required lay-verify="article_content"
-                                      class="layui-textarea fly-editor" style="height: 250px;"></textarea>
-                        </div>
-                    </div>
-                    <div class="layui-form-item">
-                        <button class="layui-btn" lay-filter="post" lay-submit type="button">立即发布</button>
-                    </div>
-                    </form>
+                            <div class="layui-form-item">
+                                <button class="layui-btn" lay-filter="post" lay-submit type="button">立即发布</button>
+                            </div>
+                        </form>
                 </div>
             </div>
         </div>
