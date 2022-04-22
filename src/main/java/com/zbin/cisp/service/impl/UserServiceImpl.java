@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Created by Zhouhailin on 2021-11-30
  */
-@Service
+@Service("MyUserServiceImpl")
 public class UserServiceImpl implements UserService {
 
     @Resource

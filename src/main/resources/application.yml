@@ -35,3 +35,12 @@ mybatis:
     map-underscore-to-camel-case: true
 server:
   port: 8080
+
+flowable:
+  idm:
+    app:
+      admin:
+        password: test
+        user-id: admin
+        first-name: admin
+        last-name: admin

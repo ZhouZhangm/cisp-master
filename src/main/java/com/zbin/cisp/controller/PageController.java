@@ -51,6 +51,7 @@ public class PageController {
                         @RequestParam(required = false) String order, @RequestParam(required = false) String search,
                         @RequestParam(required = false) Integer page) {
         int pageIndex = 0;
+        // 一页显示10篇文章
         if (page != null) {
             pageIndex = (page - 1) * 10;
         }
@@ -61,9 +62,11 @@ public class PageController {
         int count = 0;
         if (search == null) {
             if (cId == null || cId == 0) {
+                // 通过页数得到首页文章
                 articleList = articleService.getIndexArticles(pageIndex);
                 count = articleService.countIndexArticles();
                 for (ArticleVO articleVO : articleList) {
+                    // 给文章设置评论数量
                     articleVO.setCommentCount(commentService.getCommentByArticleId(articleVO.getId()).size());
                 }
             } else {
@@ -219,6 +222,7 @@ public class PageController {
         return "/backend/article/category";
     }
 
+
     @RequestMapping("/admin/article/category/add")
     public String addCategory(HttpServletRequest request) {
         return "/backend/article/category-add";
@@ -227,6 +231,23 @@ public class PageController {
     @RequestMapping("/admin/article/category/edit")
     public String editCategory(HttpServletRequest request) {
         return "/backend/article/category-edit";
+    }
+
+    @RequestMapping("/admin/article/flowable")
+    public String flowableList(HttpServletRequest request) {
+        List<Category> categoryList = categoryService.getAllCategory();
+        request.getSession().setAttribute("categoryList", categoryList);
+        return "/backend/article/flowable";
+    }
+
+    @RequestMapping("/admin/article/flowable/add")
+    public String addFlowable(HttpServletRequest request) {
+        return "/backend/article/flowable-add";
+    }
+
+    @RequestMapping("/admin/article/flowable/edit")
+    public String editFlowable(HttpServletRequest request) {
+        return "/backend/article/flowable-edit";
     }
 
     @RequestMapping("/user/{id}")

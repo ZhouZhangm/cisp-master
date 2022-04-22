@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -47,7 +48,7 @@ public class FlowableController {
         map.put("leaveTask", staffId);
         ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("Leave", map);
         StringBuilder sb = new StringBuilder();
-        sb.append("创建请假流程 processId：" + processInstance.getId());
+        sb.append("创建问题流程 processId：" + processInstance.getId());
         List<Task> tasks = taskService.createTaskQuery().taskAssignee(staffId).orderByTaskCreateTime().desc().list();
         for (Task task : tasks) {
             sb.append("任务taskId:" + task.getId());
