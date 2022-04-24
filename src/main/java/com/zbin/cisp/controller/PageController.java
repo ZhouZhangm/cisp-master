@@ -5,17 +5,13 @@ import com.alibaba.fastjson.JSONObject;
 import com.zbin.cisp.domain.Article;
 import com.zbin.cisp.domain.Category;
 import com.zbin.cisp.domain.User;
-import com.zbin.cisp.service.ArticleService;
-import com.zbin.cisp.service.CategoryService;
-import com.zbin.cisp.service.CommentService;
-import com.zbin.cisp.service.UserService;
+import com.zbin.cisp.service.*;
 import com.zbin.cisp.vo.ArticleVO;
 import com.zbin.cisp.vo.CommentVO;
+import org.flowable.task.api.Task;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -31,6 +27,9 @@ public class PageController {
 
     @Resource
     CategoryService categoryService;
+
+    @Resource
+    private FlowableService flowableService;
 
     @Resource
     UserService userService;
@@ -233,10 +232,10 @@ public class PageController {
         return "/backend/article/category-edit";
     }
 
-    @RequestMapping("/admin/article/flowable")
-    public String flowableList(HttpServletRequest request) {
-        List<Category> categoryList = categoryService.getAllCategory();
-        request.getSession().setAttribute("categoryList", categoryList);
+    @RequestMapping( value = "/admin/article/flowable", method= RequestMethod.GET, produces= MediaType.APPLICATION_JSON_VALUE)
+    public String flowableList(@RequestParam String assignee, HttpServletRequest request) {
+        List<Task> tasks = flowableService.getTasks(assignee);
+        request.getSession().setAttribute("tasksList", tasks);
         return "/backend/article/flowable";
     }
 

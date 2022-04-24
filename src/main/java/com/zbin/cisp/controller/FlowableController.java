@@ -1,5 +1,6 @@
 package com.zbin.cisp.controller;
 
+import com.zbin.cisp.domain.Category;
 import com.zbin.cisp.service.FlowableService;
 import org.flowable.bpmn.model.BpmnModel;
 import org.flowable.engine.*;
@@ -130,9 +131,10 @@ public class FlowableController {
     }
 
     @RequestMapping(value="/tasks", method= RequestMethod.GET, produces= MediaType.APPLICATION_JSON_VALUE)
-    public List<TaskRepresentation> getTasks(@RequestParam String assignee) {
+    public List<TaskRepresentation> getTasks(@RequestParam String assignee, HttpServletRequest request) {
         List<Task> tasks = flowableService.getTasks(assignee);
         List<TaskRepresentation> dtos = new ArrayList<TaskRepresentation>();
+        request.getSession().setAttribute("tasksList", tasks);
         for (Task task : tasks) {
             dtos.add(new TaskRepresentation(task.getId(), task.getName()));
         }

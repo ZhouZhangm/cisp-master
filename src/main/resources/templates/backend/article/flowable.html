@@ -27,24 +27,21 @@
   <table class="layui-table" id="memberList">
     <thead>
     <tr>
-      <th>ID</th>
+      <th>序号</th>
+      <th>流程ID</th>
       <th>流程名称</th>
-      <th>创建时间</th>
       <th>操作</th>
     </tr>
     </thead>
     <tbody>
-    <#if categoryList??>
-      <#list categoryList as category>
+    <#if tasksList??>
+      <#list tasksList as task>
         <tr data-id="1">
-          <td>${category_index + 1}</td>
-          <td>${category.name!"-"}</td>
-          <td>${category.createTime}</td>
+          <td>${task_index + 1}</td>
+          <td>${task.id}</td>
+          <td>${task.name}</td>
           <td class="td-manage">
-            <a title="编辑" onclick="WeAdminEdit('编辑','/admin/article/category/edit', ${category.id}, 340, 180)" href="javascript:;">
-              <i class="layui-icon">&#xe642;</i>
-            </a>
-            <a title="删除" onclick="delCatery(${category.id})" href="javascript:;">
+            <a title="删除" onclick="delCatery(${task.id})" href="javascript:;">
               <i class="layui-icon">&#xe640;</i>
             </a>
           </td>
