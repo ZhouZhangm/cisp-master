@@ -45,6 +45,7 @@ public class FlowableController {
     @RequestMapping(value = "startLeaveProcess")
     @ResponseBody
     public String startLeaveProcess(String staffId) {
+        staffId = "18001020303";
         HashMap<String, Object> map = new HashMap<>();
         map.put("leaveTask", staffId);
         ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("Leave", map);

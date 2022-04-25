@@ -41,6 +41,14 @@
           <td>${task.id}</td>
           <td>${task.name}</td>
           <td class="td-manage">
+            <form id="form" class="layui-form" method="get" action="">
+
+              <a type="submit" title="创建流程图" onclick="createFlowable(${task.id})" href="javascript:;">
+                <i class="layui-icon">&#xe640;</i>
+              </a>
+
+            </form>
+
             <a title="删除" onclick="delCatery(${task.id})" href="javascript:;">
               <i class="layui-icon">&#xe640;</i>
             </a>
@@ -83,12 +91,11 @@
     }
 
     //监听提交
-    form.on('submit(addCategory)', function (data) {
+    form.on('submit(addFlowable)', function (data) {
       $.ajax({
-        url: '/article/addCategory'
-        , type: 'post'
-        , contentType: 'application/json'
-        , data: JSON.stringify(data.field)
+        url: '/leave/startLeaveProcess'
+        , type: 'get'
+        , data: {'staffId': "88888888"}
         , success: function (result) {
           if (result.code == 0) {
             layer.alert("增加成功", {

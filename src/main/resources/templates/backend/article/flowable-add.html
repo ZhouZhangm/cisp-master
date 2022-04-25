@@ -17,14 +17,14 @@
   <form id="form" class="layui-form">
 
     <div class="layui-form-item">
-      <label class="layui-form-label">流程名称</label>
+      <label class="layui-form-label">学号</label>
       <div class="layui-input-block">
-        <input type="text" name="name" lay-verify="required" jq-error="请输入流程名称"
+        <input type="text" name="name" lay-verify="required" jq-error="学号"
                placeholder="请输入学号" autocomplete="off" class="layui-input ">
       </div>
     </div>
     <div class="layui-input-block">
-      <button class="layui-btn" lay-submit="" lay-filter="addFlowable">立即提交</button>
+      <button class="layui-btn" lay-submit="" lay-filter="addFlowable" type="submit">立即提交</button>
       <button type="reset" class="layui-btn layui-btn-primary">重置</button>
     </div>
   </form>
@@ -43,21 +43,24 @@
 
     //监听提交
     form.on('submit(addFlowable)', function (data) {
+
       $.ajax({
-        url: '/article/addFlowable'
-        , type: 'post'
-        , contentType: 'application/json'
-        , data: JSON.stringify(data.field)
+        url: '/leave/startLeaveProcess'
+        , type: 'get'
+        , data: {'staffId': "18001020303"}
         , success: function (result) {
+          window.parent.location.reload();
           if (result.code == 0) {
+
             layer.alert("增加成功", {
               icon: 1
             }, function () {
               // 获得frame索引
+              print(data)
               var index = parent.layer.getFrameIndex(window.name);
               //关闭当前frame
               parent.layer.close(index);
-              window.parent.location.reload();
+
             });
           } else {
             layer.alert(result.msg)
